@@ -1,0 +1,184 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  /* Brand */
+  --color-electric: var(--electric);
+  --color-cyan: var(--cyan);
+  --color-lime: var(--lime);
+  --color-pink: var(--pink);
+  --color-void: var(--void);
+
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+
+  --gradient-hologram: linear-gradient(90deg, var(--cyan), var(--electric), var(--pink));
+  --gradient-glow-pink: radial-gradient(closest-side, color-mix(in oklab, var(--pink) 50%, transparent), transparent);
+  --gradient-glow-cyan: radial-gradient(closest-side, color-mix(in oklab, var(--cyan) 40%, transparent), transparent);
+  --gradient-glow-lime: radial-gradient(closest-side, color-mix(in oklab, var(--lime) 40%, transparent), transparent);
+
+  --shadow-sticker: 0 0 0 0 var(--lime);
+  --shadow-glow-electric: 0 0 60px color-mix(in oklab, var(--electric) 35%, transparent);
+}
+
+:root {
+  --radius: 1rem;
+
+  --void: oklch(0.10 0 0);
+  --electric: oklch(0.55 0.30 305);
+  --cyan: oklch(0.88 0.18 210);
+  --lime: oklch(0.93 0.22 120);
+  --pink: oklch(0.70 0.32 340);
+
+  --background: var(--void);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.16 0.01 280);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.16 0.01 280);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: var(--lime);
+  --primary-foreground: var(--void);
+  --secondary: oklch(0.20 0.02 280);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.18 0.01 280);
+  --muted-foreground: oklch(0.65 0.02 280);
+  --accent: var(--cyan);
+  --accent-foreground: var(--void);
+  --destructive: oklch(0.65 0.25 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.25 0.02 280);
+  --input: oklch(0.22 0.02 280);
+  --ring: var(--electric);
+}
+
+.dark {
+  /* Project is dark-first; mirror :root */
+  --background: var(--void);
+  --foreground: oklch(0.98 0 0);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  ::selection {
+    background-color: var(--lime);
+    color: var(--void);
+  }
+}
+
+@layer utilities {
+  .text-hologram {
+    background: var(--gradient-hologram);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline-block;
+    padding: 0.15em 0.15em 0.2em;
+    margin: -0.05em -0.1em -0.1em;
+    line-height: 1.2;
+  }
+
+  .text-hologram:where(.italic, em, i),
+  .italic .text-hologram,
+  .text-hologram.italic {
+    padding-right: 0.25em;
+    margin-right: -0.15em;
+  }
+
+  .grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .sticker-btn {
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+  .sticker-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--lime);
+    border-radius: inherit;
+    transform: translate(8px, 8px);
+    z-index: -1;
+    transition: transform 0.2s ease;
+  }
+  .sticker-btn:hover {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  .sticker-btn:hover::after {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes infinite-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: infinite-scroll 30s linear infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+.animate-float { animation: float-slow 6s ease-in-out infinite; }
