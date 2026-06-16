@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { sendBrief } from "../lib/sendBrief";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -36,42 +37,38 @@ function ContactPage() {
     const formData = new FormData(e.currentTarget);
     
     // Package data cleanly into a standard JSON payload
-    const payload = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      company: formData.get("company"),
-      site: formData.get("site") || "N/A",
-      budget: formData.get("budget") || "Not selected",
-      services: selectedServices.join(", ") || "None selected",
-      brief: formData.get("brief"),
-    };
+   const payload = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    company: formData.get("company"),
+    site: formData.get("site") || "N/A",
+    budget: formData.get("budget") || "Not selected",
+    services: selectedServices.join(", ") || "None selected",
+    brief: formData.get("brief"),
+  };
 
-    try {
-      // REPLACE THIS URL WITH YOUR ACTUAL DOMAIN PATH TO THE PHP FILE
-      const HOSTINGER_PHP_URL = "https://krinasso.com/send-brief.php";
-
-      const response = await fetch(HOSTINGER_PHP_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setSubmitted(true);
-      } else {
-        setErrorMessage(data.message || "Something went wrong. Please try again.");
-      }
-    } catch (error) {
-      setErrorMessage("Could not connect to the server. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
+   try {
+     const data = await sendBrief({
+       data: payload,
+     });
+    
+     if (data.success) {
+       setSubmitted(true);
+     } else {
+       setErrorMessage(
+         data.message || "Something went wrong. Please try again."
+       );
+     }
+   } catch (error) {
+     console.error(error);
+    
+     setErrorMessage(
+       "Could not send the brief. Please try again later."
+     );
+   } finally {
+   setIsSubmitting(false);
+   }
   }
-
   return (
     <div className="px-6 py-20 md:py-28">
       <div className="max-w-5xl mx-auto">
